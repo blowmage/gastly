@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['work@mgrachev.com']
 
   spec.summary       = 'Create screenshots or previews of web pages using Gastly. Gastly, I choose you!'
-  spec.description   = 'Create screenshots or previews of web pages using Gastly. Under the hood Phantom.js and MiniMagick.'
+  spec.description   = 'Create screenshots or previews of web pages using Gastly. Under the hood Phantom.js and ruby-vips.'
   spec.homepage      = 'https://github.com/mgrachev/gastly'
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
@@ -26,5 +26,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '~> 3.4.0'
 
   spec.add_dependency 'phantomjs', '~> 2.1.1'
-  spec.add_dependency 'mini_magick', '~> 4.2'
+  spec.add_dependency 'ruby-vips', '~> 2.1'
 end

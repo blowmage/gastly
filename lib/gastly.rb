@@ -1,5 +1,5 @@
 require 'phantomjs'
-require 'mini_magick'
+require 'ruby-vips'
 
 require_relative 'gastly/utils'
 require_relative 'gastly/phantomjs_patch'

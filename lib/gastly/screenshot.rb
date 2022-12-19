@@ -6,7 +6,7 @@ module Gastly
     DEFAULT_BROWSER_HEIGHT = 900
     DEFAULT_FILE_FORMAT = '.png'.freeze
 
-    attr_reader :image
+    attr_reader :tmpfile, :image
     attr_writer :timeout, :browser_width, :browser_height
     attr_accessor :url, :selector, :cookies, :proxy_host, :proxy_port, :phantomjs_options
 
@@ -18,7 +18,7 @@ module Gastly
       @url = url
       @cookies = kwargs.delete(:cookies)
 
-      @image = MiniMagick::Image.create(DEFAULT_FILE_FORMAT, false) # Disable validation
+      @tmpfile = file = Tempfile.new(['image', '.png'])
 
       kwargs.each { |key, value| instance_variable_set(:"@#{key}", value) }
     end
@@ -31,10 +31,11 @@ module Gastly
       Phantomjs.proxy_host = proxy_host if proxy_host
       Phantomjs.proxy_port = proxy_port if proxy_port
 
+      # should really set tempfile here and remove it as soon as image is created...
       output = Phantomjs.run(options, SCRIPT_PATH.to_s, *prepared_params)
       handle_output(output)
-
-      Gastly::Image.new(image)
+      @image = Vips::Image.pngload tmpfile.path
+      Gastly::Image.new(@image)
     end
 
     %w(timeout browser_width browser_height).each do |name|
@@ -61,7 +62,7 @@ module Gastly
         timeout:  timeout,
         width:    browser_width,
         height:   browser_height,
-        output:   image.path
+        output:   tmpfile.path
       }
 
       params[:selector] = selector if selector
